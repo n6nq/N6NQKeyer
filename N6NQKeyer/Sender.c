@@ -154,10 +154,11 @@ int sndr_send()
 	
 	switch (sndr_state)							//0) Power On
 	{
-	case NOTSENDING | NOBITS | EMPTY:			//	Initial: !sending, nbits = 0, empty				000
+	case  NOTSENDING | NOBITS | EMPTY:			//	Initial: !sending, nbits = 0, empty				000
 		return 0;								//	Action:		if !sending and empty then return
 												//	Finish:  same
 												//1) First time
+												//new
 	case NOTSENDING | NOBITS | NOTEMPTY:		//	Initial: !sending, nbits = 0, !empty			011
 												//Action: turn on timer
 		sndr_state |= (((sndr_char = CircBuf_read_char(&sndr_buf)) > 0) ? NOTEMPTY : EMPTY);	// get character -> empty
