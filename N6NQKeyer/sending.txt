@@ -1,0 +1,28 @@
+//Scenarios
+//0) Power On
+//	Initial: !sending, nbits = 0, empty				000
+//	Action:		if !sending and empty then return
+//	Finish:  same
+//1) First time
+//	Initial: !sending, nbits = 0, !empty			011
+//	Action: 	if !empty and !sending
+//					turn on timer
+//					get character -> empty
+//					nbits = bitify(character)
+//					sending = true
+//					eat/send first bit -> nbits
+//	Finish: sending, nbits > 0, !empty				
+//2) Mid-character
+//	Initial: sending, nbits > 0						11?
+//	Action:		eat/send next bit -> nbits
+//	Finish:   sending, nbits > 0
+//3) End of character
+//	Initial: sending, nbits = 0, !empty				101
+//	Action:		get next character -> empty
+//				bitify(character) -> nbits
+//				eat/send first bit
+//	Finish: sending, nbits > 0, !empty
+//4) Last character
+//	Initial: sending, nbits = 0, empty				100
+//	Action:		set !sending
+//	Finish: !sending, nbits = 0, empty
