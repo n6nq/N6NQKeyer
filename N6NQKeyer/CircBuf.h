@@ -50,6 +50,8 @@ void CircBuf_commit_write(CircBuf* pbuf, uint16_t length);
 
 #define CircBuf_available_data(B) ((B)->data_avail)
 
+#define CircBuf_bytes_at_end(B) ((B)->length - (B)->next)
+
 #define CircBuf_ends_at(B) ((B)->buffer + (B)->next)
 
 #define CircBuf_test_empty(B) ((B)->start == (B)->next)

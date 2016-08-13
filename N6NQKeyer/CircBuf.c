@@ -77,18 +77,32 @@ void CircBuf_commit_write(CircBuf* pbuf, uint16_t length)
 	//return 0;
 //}
 
-int CircBuf_writeP(CircBuf *buffer, const uint_farptr_t pdata)
+int CircBuf_writeP(CircBuf *pbuf, const uint_farptr_t pdata)
 {
+	int bytes_to_end;
 	int length = strlen_PF(pdata);
-	int avail = CircBuf_available_space(buffer);
+	int avail = CircBuf_available_space(pbuf);
+	
 	if (length > avail)
-		return -1;
+		return -1;		//TODO beep here
 
-	void *result = memcpy_PF(CircBuf_ends_at(buffer), pdata, length);
-	if (result == NULL)
-		return -2;
+	bytes_to_end = CircBuf_bytes_at_end(pbuf);
 
-	CircBuf_commit_write(buffer, length);
+	if (bytes_to_end >= length)
+	{
+		memcpy_PF(CircBuf_ends_at(pbuf), pdata, length);
+	}
+	else
+	{
+		memcpy_PF(CircBuf_ends_at(pbuf), pdata, bytes_to_end);
+		memcpy_PF(pbuf->buffer, pdata+bytes_to_end, length-bytes_to_end);
+
+	}
+	
+	//if (result == NULL)
+	//	return -2;
+
+	CircBuf_commit_write(pbuf, length);
 
 	return length;
 }
