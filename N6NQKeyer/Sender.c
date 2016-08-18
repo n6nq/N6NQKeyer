@@ -149,7 +149,7 @@ int sndr_send()
 		return 0;
 
 	sndr_state = sndr_state & SENDING;
-	sndr_state |= (CircBuf_test_empty(&sndr_buf) ? EMPTY : NOTEMPTY);
+	sndr_state |= (sndr_buf.data_avail ? NOTEMPTY : EMPTY);
 	sndr_state |= ((sndr_nbits > 0) ? BITS : NOBITS);
 	
 	switch (sndr_state)							//0) Power On
@@ -205,6 +205,7 @@ int sndr_sendstrP(const uint_farptr_t pstr)
 	if (!sndr_running) {
 			tc_timeout_start_periodic(sndr_which, 1200/sndr_speed);
 			sndr_running = 1;
+			sndr_state |= SENDING;
 	}
 	return rv;
 }

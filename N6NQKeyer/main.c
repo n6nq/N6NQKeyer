@@ -14,7 +14,7 @@
 #define BEACON_TIMER	1
 #define SYS_TIMER		2
 
-#define BEACON_TIMEOUT	10
+#define BEACON_TIMEOUT	20
 
 #define DITDAHS \
 ASSOC(0b00000000, 0x85, ' ',".....",  0x20) \
@@ -100,7 +100,7 @@ const uint8_t dit_lengths[NUM_SYMBOLS] PROGMEM = {DITDAHS};
 const char string1[] PROGMEM = "CQ CQ CQ CQ ";
 const char string2[] PROGMEM = "N6NQ N6KZ N6JZ ";
 const char string3[] PROGMEM = "QTH QRZ QRP QRO ";
-const char beaconstr[] PROGMEM = "CQ CQ CQ N6NQ N6NQ K";
+const char beaconstr[] PROGMEM = "CQ CQ CQ N6NQ N6NQ K   ";
 
 uint8_t beacon_timer;
 uint16_t beacon_seconds;
@@ -117,13 +117,14 @@ void beacon_send()
 	if (!tc_timeout_test_and_clear_expired(beacon_timer))
 		return;
 	
-	beacon_seconds++;
 	
-	if (beacon_seconds >= BEACON_TIMEOUT)
+	if ((beacon_seconds % BEACON_TIMEOUT) == 0)
 	{
 		sndr_sendstrP((uint_farptr_t) beaconstr);
-		beacon_seconds = 0;
+	//	beacon_seconds = 0;
 	}
+	
+	beacon_seconds++;	
 }
 void setup(void)
 {
