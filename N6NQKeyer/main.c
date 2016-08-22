@@ -16,6 +16,29 @@
 
 #define BEACON_TIMEOUT	20
 
+// The ditdah table. First byte is a map of the dits and dahs to be sent for this char. 
+// A zero signifies a dit and a one indicates a dah. The most significant bit is sent first.
+// The second byte indicates how many bits in the map are valid or part of the character,
+// except for the first row. There are not 0x85 dits and dahs in a SPACE. There are 5 dit times in
+// a space but they are silent. So the 0x80 bit means this character is silent and the 5 means
+// that there five silent dits. The third member in each row is a character that serves a 
+// convienence for the programmer. It simply reminds the programmer what character this row is for.
+// The fourth member is a string that reminds the programmer what this dits and dahs are for this 
+// character, again a convienence. The last member is a hex/ASCII code for this character. This
+// is what the program expects to receive from the keyboard. The value received from the keyboard
+// is used to index into the table after a little math is done on the keyboard value. If we receive
+// a 0x20(space) from the keyboard and take 0x20 away from all received characters, we'lll end up 
+// with the 0 index we need to find the data we need for output a space. Also understand that 
+// DITDAHS is a macro ans does not define any data for the program. Instead this macro defines
+// a long sequence of other macros named ASSOC. Below the table, you'll see the defines of the ASSOC()
+// macro. Looking close at those defines, you will see that they define/use only one member of the 
+// of the input parameters. When DITDAHS is referred to in each following data declaration, only one
+// member of each row is going into each row of that that declared character array. So the first member
+// of each row goes in the the first array and the second member goes into the second array. The
+// third, fourth and fifth members are never referred to and therefore never go into the programs
+// data or program space. They only live here in the source as a convienence for the programmer.
+// Of course, you could use this trick to define as many parallel arrays as you wish.    
+// 
 #define DITDAHS \
 ASSOC(0b00000000, 0x85, ' ',".....",  0x20) \
 ASSOC(0b10101100, 6, '!', "-.-.--",0x21) \
